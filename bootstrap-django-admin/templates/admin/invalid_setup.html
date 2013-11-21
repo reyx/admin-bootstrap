@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block breadcrumbs %}
+	<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+	<li class="active"><a href="#">{{ title }}</a></li>
+{% endblock %}
+
+{% block content %}
+<p class="alert alert-danger"><i class="icon-sign-warning"></i>{% trans "Something's wrong with your database installation. Make sure the appropriate database tables have been created, and make sure the database is readable by the appropriate user." %}</p>
+{% endblock %}

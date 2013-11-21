@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<div class="actions">
+<input type="hidden" id="action" name="action" />
+<div class="btn-group">
+    <button type="submit" class="btn">Executar Ação</button>
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">{#% trans "Action" %#} <span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        {% for field in action_form %}
+            {% for option in field.field.choices %}
+                {% if not forloop.first %}
+                <li>
+                    <a href="javascript:;" name="{{ option.0 }}">{{ option.1 }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div><br>
+{% if actions_selection_counter %}
+    <br>
+    <div class="well well-small" style="margin: 0;">
+    <script type="text/javascript">var _actions_icnt="{{ cl.result_list|length|default:"0" }}";</script>
+    <span class="action-counter">{{ selection_note }}</span>
+    {% if cl.result_count != cl.result_list|length %}
+    <span class="all hide">{{ selection_note_all }}</span>
+    <a class="question pull-right" href="javascript:makeSelect(true);" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a>
+    <a class="clear hide pull-right" href="javascript:makeSelect(false);">{% trans "Clear selection" %}</a>
+    {% endif %}
+    </div>
+{% endif %}
+</div>

@@ -1,0 +1,8 @@
+{% extends "admin/change_form.html" %}
+{% load admin_static %}
+
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="{% static "bootstrap/js/tiny_mce/tiny_mce.js" %}"></script>
+<script type="text/javascript" src="{% static "bootstrap/js/custom/textareas.js" %}"></script>
+{% endblock %}

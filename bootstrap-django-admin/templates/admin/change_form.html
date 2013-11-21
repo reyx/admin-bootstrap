@@ -1,0 +1,98 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_modify %}
+{% load url from future %}
+{% load admin_urls %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-datepicker.css" %}" />
+<link rel="stylesheet" href="{% static "common/css/ui.multiselect.css" %}" />
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static "common/js/jquery-migrate-1.1.1.min.js" %}"></script>
+<script type="text/javascript" src="{% static "common/js/jquery.meio.mask.min.js" %}"></script>
+<script type="text/javascript" src="{% static "bootstrap/js/bootstrap-datepicker.js" %}"></script>
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+<script type="text/javascript" src="{% static "admin/js/core.js" %}"></script>
+<script type="text/javascript" src="{% static "common/js/wysihtml5/wysihtml5-0.3.0.min.js" %}"></script>
+<script type="text/javascript" src="{% static "common/js/wysihtml5/bootstrap-wysihtml5.js" %}"></script>
+<script type="text/javascript" src="{% static "common/js/textareas.js" %}"></script>
+{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+    <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+    <li><a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ app_label|capfirst|escape }}</a></li>
+    <li>{% if has_change_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}</li>
+    <li class="active"><a href="#">{% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</a></li>
+{% endblock %}
+{% endif %}
+
+{% block content_title %}
+    {{ block.super }}
+    {% if change %}
+        {% if not is_popup %}
+            <div class="span4" style="text-align: right;">
+                {% block object-tools-items %}
+                <div style="padding: 8px 0;">
+                    <a href="history/" class="label label-info">{% trans "History" %}</a>
+                    {% if has_absolute_url %}
+                    <a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="label label-info">{% trans "View on site" %} <i class="icon-circle-arrow-right icon-white"></i></a>
+                    {% endif%}
+                </div>
+                {% endblock %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form class="form-horizontal"{% if has_file_field %} enctype="multipart/form-data"{% endif %} action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
+        {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+        {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+        {% if errors %}
+            <p class="alert alert-danger">
+                {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+            </p>
+            {{ adminform.form.non_field_errors }}
+        {% endif %}
+
+        {% block field_sets %}
+        {% for fieldset in adminform %}
+            {% include "admin/includes/fieldset.html" %}
+        {% endfor %}
+        {% endblock %}
+
+        {% block after_field_sets %}{% endblock %}
+
+        {% block inline_field_sets %}
+        {% if inline_admin_formsets %}
+        <ul class="nav nav-tabs">
+            {% for inline_admin_formset in inline_admin_formsets %}
+              <li{% if forloop.first %} class="active"{% endif %}>
+                <a href="#{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}tab" data-toggle="tab">{{ inline_admin_formset.opts.verbose_name_plural|capfirst }}</a>
+              </li>
+              {% endfor %}
+        </ul>
+        <div class="tab-content">
+        {% for inline_admin_formset in inline_admin_formsets %}
+            <div class="tab-pane{% if forloop.first %} active{% endif %}" id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}tab">
+            {% include inline_admin_formset.opts.template %}
+            </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+        {% endblock %}
+
+        {% block after_related_objects %}{% endblock %}
+
+        {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+        {% if adminform and add %}
+            <script type="text/javascript">$("#{{ adminform.first_field.id_for_label }}").focus();</script>
+        {% endif %}
+
+        {% prepopulated_fields_js %}
+    </form>
+{% endblock %}

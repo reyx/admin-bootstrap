@@ -1,0 +1,8 @@
+{% if show %}
+	{% if back %}
+	<a href="{{ back.link }}" class="label label-info"><i class="icon-circle-arrow-left icon-white"></i> {{ back.title }}</a>
+	{% endif %}
+	{% for choice in choices %}
+	{% if choice.link %}<a href="{{ choice.link }}" class="label label-info">{% endif %}{{ choice.title }}{% if choice.link %}</a>{% endif %}
+	{% endfor %}
+{% endif %}

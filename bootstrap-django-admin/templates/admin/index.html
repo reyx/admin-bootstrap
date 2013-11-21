@@ -1,0 +1,43 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static app_extension %}
+{% block breadcrumbs %}
+	<h4>{% trans 'Welcome,' %} {% filter force_escape %}{% firstof user.first_name|capfirst user.username|capfirst %}{% endfilter %}</h4>
+{% endblock %}
+{% block content %}
+<div class="row">
+{% if app_list %}
+	<div class="marketing">
+	    {% for app in app_list %}
+	    <div class="span4">
+	        <div class="well">
+	            {# <img class="bs-icon" src="{% static "bootstrap/img/glyphicons/" %}{{ app.name|get_app_property:'icon' }}" /> #}
+	            <h2 class="page-header"><a href="{{ app.app_url }}" class="text-success">{{ app.name|get_app_property:'title' }}</a></h2>
+	            <p>{{ app.name|get_app_property:'description' }}</p>
+	            <div class="pull-right">
+		            <div class="btn-group">
+		                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">Selecione... <span class="caret icon-white"></span></button>
+						<ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
+	                       	{% for model in app.models %}
+		                    <li>
+		                    {% if model.admin_url %}
+	                            <a href="{{ model.admin_url }}">{% trans model.name %}</a>
+		                    {% else %}
+		                        {% trans model.name %}
+		                    {% endif %}
+		                    </li>
+		                   	{% endfor %}
+	                   	</ul>
+		            </div>
+	            </div>
+	            <div class="clearfix"></div>
+	        </div>
+	    </div>
+	{% endfor %}
+	</div>
+{% else %}
+	<div class="span12">
+		<p class="alert alert-info">{% trans "You don't have permission to edit anything." %}</p>
+	</div>
+{% endif %}
+</div>
+{% endblock %}

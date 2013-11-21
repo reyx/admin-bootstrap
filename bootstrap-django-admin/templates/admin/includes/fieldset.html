@@ -1,0 +1,40 @@
+<fieldset>
+    {% if fieldset.name %}
+    <legend class="page-header">{{ fieldset.name }}</legend>
+    {% endif %}
+    {% if fieldset.description %}
+    <p>{{ fieldset.description|safe }}</p>
+    {% endif %}
+    {% for line in fieldset %}
+    {% for field in line %}
+    <div class="control-group {% if not field.is_readonly and field.errors %}error{% endif %}">
+    {% if field.is_checkbox %}
+        <label class="control-label"></label>
+        <div class="controls">
+            <label class="checkbox">{{ field.field }}{{ field.contents }} {{ field.field.label }}</label>
+        </div>
+    {% else %}
+        <label class="control-label" for="{{ field.field.html_name }}">{% if field.field.field.required %}<strong>{{ field.field.label }}</strong>{% else %}{{ field.field.label }}{% endif %}</label>
+        <div class="controls">
+            {% if field.is_readonly %}
+                <span>{{ field.contents }}</span>
+            {% else %}
+                {{ field.field }}
+                {% if field.field.help_text %}
+                <span class="help-inline">{{ field.field.help_text|safe }}</span>
+                {% endif %}
+            {% endif %}
+            {% if not line.fields|length_is:'1' and not field.is_readonly %}
+            <p class="help-block">{{ field.errors }}</p>
+            {% endif %}
+            {% if line.fields|length_is:'1' %}
+            {% for error in field.field.errors %}
+            <p class="help-block">{{ error }}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+    {% endif %}
+    </div>
+    {% endfor %}
+    {% endfor %}
+</fieldset>

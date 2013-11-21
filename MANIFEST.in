@@ -1,0 +1,5 @@
+include README.rst
+include LICENSE
+recursive-include bootstrap-django-admin *
+recursive-include bootstrap-django-admin/static *
+recursive-include bootstrap-django-admin/templates *

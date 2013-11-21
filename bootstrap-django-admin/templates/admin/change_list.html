@@ -1,0 +1,120 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static custom_admin_list %}
+{% load url from future %}
+{% load admin_urls %}
+
+{% block styles %}
+{% if cl.formset or action_form %}
+{% url 'admin:jsi18n' as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+{% endif %}
+{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+<li><a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ app_label|capfirst|escape }}</a></li>
+<li class="active"><a href="#">{{ cl.opts.verbose_name_plural|capfirst }}</a></li>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+{% if cl.formset.errors %}
+<p class="alert alert-danger">
+    {% blocktrans count cl.formset.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+</p>
+{{ cl.formset.non_form_errors }}
+{% endif %}
+
+<div id="changelist">
+    <div class="well">
+        <div class="row-fluid">
+            <div class="span6">
+                {% block search %}{% search_form cl %}{% endblock %}
+            </div>
+            <div class="span3">
+                {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+            </div>
+            <div class="span3" style="text-align: right;">
+                {% if has_add_permission %}
+                <a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}" class="btn btn-primary">
+                    {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if cl.has_filters %}
+    <div class="row">
+        <div class="span9">
+            {% endif %}
+
+            <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
+                {% if cl.formset %}
+                <div>{{ cl.formset.management_form }}</div>
+                {% endif %}
+
+                {% block result_list %}
+                {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
+                {% result_list cl %}
+                {% endblock %}
+                {% block pagination %}{% pagination cl %}{% endblock %}
+            </form>
+
+            {% if cl.has_filters %}
+        </div>
+        <div class="span3" id="changelist-filter">
+            <legend>{% trans 'Filter' %}</legend>
+            {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+$(function() {
+    var container = $('div.actions');
+
+    container.find('a').on('click', function () {
+        container.find('#action').val(this.name);
+        $('#changelist-form button[name="index"]').trigger('click');
+    });
+
+    $('#action-toggle').on('change', function() {
+        makeSelect($(this).is(':checked'));
+    });
+    $('.action-select').on('change', function() {
+        $('#action-toggle').prop('checked', $('.action-select:checked').length === $('.action-select').length);
+        updateCounter();
+    });
+});
+
+function updateCounter() {
+    var sel = $('.action-select').filter(":checked").length;
+    $('.action-counter').html(interpolate(
+        ngettext('%(sel)s of %(cnt)s selected', '%(sel)s of %(cnt)s selected', sel), {
+            sel: sel,
+            cnt: _actions_icnt
+        }, true));
+}
+
+function makeSelect(selected) {
+    $('#action-toggle, .action-select').prop('checked', selected);
+    if (selected) {
+        if ($('.all').length > 0) {
+            $('.all,.clear').show();
+            $('.question,.action-counter').hide();
+            $('.select-across').val(1);
+        }
+    } else {
+        $('.all,.clear').hide();
+        $('.question,.action-counter').show();
+        $('.select-across').val(0);
+    }
+    updateCounter();
+}
+</script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static %}
+{% load url from future %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/login.css" %}" />{% endblock %}
+
+{% block bodyclass %}login{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}
+  <h4>Acesso ao sistema</h4>
+{% endblock %}
+
+{% block content %}
+{% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
+<p class="alert alert-danger">
+{% blocktrans count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+</p>
+{% endif %}
+
+{% if form.non_field_errors or form.this_is_the_login_form.errors %}
+{% for error in form.non_field_errors|add:form.this_is_the_login_form.errors %}
+<p class="alert alert-danger">{{ error }}</p>
+{% endfor %}
+{% endif %}
+<br>
+<div class="row">
+    <div class="span4">
+        <form class="form-inline" action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+          	<div class="control-group{% if form.username.errors %} error{% endif %}">    
+        		<label for="id_username" class="control-label">{% trans 'Username' %}</label>
+             	<div class="controls">
+        			{{ form.username }}
+        			{% if not form.this_is_the_login_form.errors %}
+        			{% for error in form.username.errors %}
+        			<p class="help-block">{{ error }}</p>
+        			{% endfor %}
+        			{% endif %} 		
+             	</div>
+          	</div>
+          	<div class="control-group{% if form.password.errors %} error{% endif %}">    
+        		<label for="id_username" class="control-label">{% trans 'Password' %}</label>
+             	<div class="controls">
+        			{{ form.password }}
+                    {% if not form.this_is_the_login_form.errors %}
+                    {% for error in form.password.errors %}
+                    <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+        		<input type="hidden" name="this_is_the_login_form" value="1" />
+        		<input type="hidden" name="next" value="{{ next }}" />
+          	</div>
+          	{% url 'admin_password_reset' as password_reset_url %}
+          	{% if password_reset_url %}
+          	<div class="password-reset-link">
+        		<a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+          	</div>
+          	{% endif %}
+            {% comment %}
+            <label for="connected" class="pull-left"><input type="checkbox" id="connected"> manterme conectado</label> 
+            <a href="#" class="pull-right">Esqueceu a senha?</a>
+            {% endcomment %}
+            <button type="submit" class="btn btn-primary">{% trans 'Log in' %}</button>
+       </form>
+    </div>
+</div>
+{% endblock %}
