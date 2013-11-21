@@ -1,0 +1,12 @@
+﻿/* Multiselect
+----------------------------------*/
+.multiselect { min-height: 200px; padding: 20px; }
+.multiselect div.available { border-left: 1px solid #ddd; padding-left: 16px; }
+.multiselect div.selected span,
+.multiselect div.selected a,
+.multiselect div.available span,
+.multiselect div.available a { line-height: 28px; }
+.multiselect ul { -moz-user-select: none; height: 158px; overflow-y: auto; overflow-x: hidden; margin-top: 16px; }
+.multiselect li { list-style: none; display: block; }
+.multiselect li a { padding: 0 8px;  }
+.multiselect li.ui-draggable-dragging { padding-left: 10px; }
