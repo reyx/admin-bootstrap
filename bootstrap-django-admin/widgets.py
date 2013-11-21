@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 class RelatedFieldWidgetWrapper(RelatedFieldWidgetWrapper):
 
     class Media:
-        js = ('admin_enhancer/js/related-widget-wrapper.js',)
+        js = ('admin/js/related-widget-wrapper.js',)
 
     def __init__(self, *args, **kwargs):
         self.can_change_related = kwargs.pop('can_change_related', None)
@@ -53,7 +53,7 @@ class RelatedFieldWidgetWrapper(RelatedFieldWidgetWrapper):
             context.update({'delete_url_template': template,
                             'delete_help_text': _(u'excluir registro'),})
 
-        return mark_safe(render_to_string('admin_enhancer/related-widget-wrapper.html', context))
+        return mark_safe(render_to_string('admin/related-widget-wrapper.html', context))
 
 class FilteredSelectMultipleWrapper(FilteredSelectMultiple):
 
