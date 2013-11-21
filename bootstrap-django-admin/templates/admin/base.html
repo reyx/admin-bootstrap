@@ -14,8 +14,7 @@
     {% block styles %}{% endblock %}
     <link rel="shortcut icon" href="{% static "ico/favicon.ico" %}" />
     {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
-    <script type="text/javascript" src="{% static "common/js/jquery.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "common/js/jquery-migrate-1.1.0.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "admin/js/jquery.min.js" %}"></script>
     {% block extrahead %}{% endblock extrahead %}
 </head>
 {% load i18n %}
@@ -24,7 +23,7 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a href="/admin" class="brand"><img src="{% static "common/img/logo.png" %}"></a>
+            <a href="/admin" class="brand"><img src="{% static "admin/img/logo.png" %}"></a>
             {% if user.is_active and user.is_staff %}
             <div class="btn-group pull-right" style="margin:6px 0;padding:0;">
                 <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -117,12 +116,12 @@
 </body>
 <!-- scripts -->
 <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% static "admin/" %}{% endfilter %}";</script>
-<script type="text/javascript" src="{% static "common/js/jquery-ui-1.8.22/js/jquery-ui-1.8.22.custom.min.js" %}"></script>
-<script type="text/javascript" src="{% static "common/js/jquery-multiselect/ui.multiselect.js" %}"></script>
-<script type="text/javascript" src="{% static "common/js/jquery-multiselect/localisation/localisation.min.js" %}"></script>
-<script type="text/javascript" src="{% static "common/js/jquery-multiselect/scrollto/scrollto.min.js" %}"></script>
-<script type="text/javascript" src="{% static "common/js/jquery-multiselect/ui.multiselect.js" %}"></script>
-<script type="text/javascript" src="{% static "common/js/jquery-multiselect/locale/ui-multiselect-pt-BR.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-ui-1.8.22/js/jquery-ui-1.8.22.custom.min.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-multiselect/ui.multiselect.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-multiselect/localisation/localisation.min.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-multiselect/scrollto/scrollto.min.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-multiselect/ui.multiselect.js" %}"></script>
+<script type="text/javascript" src="{% static "admin/js/jquery-multiselect/locale/ui-multiselect-pt-BR.js" %}"></script>
 <script type="text/javascript" src="{% static "admin/js/bootstrap.min.js" %}"></script>
 <script type="text/javascript" src="{% static "admin/js/admin/admin.js" %}"></script>
 <script type="text/javascript" src="{% static "admin/js/admin/RelatedObjectLookups.js" %}"></script>
